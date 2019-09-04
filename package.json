@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/nilslockean/spacesandcities.com#readme",
   "devDependencies": {
-    "gulp": "^4.0.2"
+    "gulp": "^4.0.2",
+    "gulp-util": "^3.0.8",
+    "vinyl-ftp": "^0.6.1"
   }
 }
