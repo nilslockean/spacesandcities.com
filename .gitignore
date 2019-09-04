@@ -1,6 +1,7 @@
 node_modules
 .DS_Store
 *ftp-credentials.js
+wp-content
 
 *.log
 wp-config.php
