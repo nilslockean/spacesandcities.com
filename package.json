@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/nilslockean/spacesandcities.com/issues"
   },
-  "homepage": "https://github.com/nilslockean/spacesandcities.com#readme"
+  "homepage": "https://github.com/nilslockean/spacesandcities.com#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  }
 }
