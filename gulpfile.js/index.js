@@ -1,5 +1,6 @@
 const { series, src, dest } = require('gulp');
 const babel = require('gulp-babel');
+const minify = require('gulp-babel-minify');
 const ftpCredentials = require('./ftp-credentials');
 
 const PATH = Object.freeze({
@@ -19,6 +20,11 @@ function javascript() {
   return src(PATH.JS)
     .pipe(babel({
       presets: ['@babel/env']
+    }))
+    .pipe(minify({
+      mangle: {
+        keepClassName: true
+      }
     }))
     .pipe(dest(PATH.DEST));
 }
