@@ -10,13 +10,13 @@
 			if ( have_posts() ) :
 				while ( have_posts() ) :
 					the_post();
-					get_template_part( 'content', 'single' );
+					get_template_part( 'content', 'urban-lab' );
 				endwhile;
 			endif;
 			?>
 		</div>
 
-		<?php FLTheme::sidebar( 'right' ); ?>
+		<?php ccsc_sidebar('single-urban-lab'); ?>
 
 	</div>
 </div>
