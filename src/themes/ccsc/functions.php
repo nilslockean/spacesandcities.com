@@ -22,6 +22,14 @@ if ( function_exists('register_sidebar') ) {
     'after_title' => '</h2>'
    ));
 
+   register_sidebar(array(
+    'name' => 'Single Urban Lab',
+    'id' => 'single-urban-lab-sidebar',
+    'before_widget' => '<div id="%1$s" class="widget %2$s">',
+    'after_widget' => '</div>',
+    'before_title' => '<h2>',
+    'after_title' => '</h2>'
+   ));
 }
 
 // Urban Labs Post Type
