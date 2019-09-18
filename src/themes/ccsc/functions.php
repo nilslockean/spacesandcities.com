@@ -72,6 +72,10 @@ function ccsc_urban_labs_post_type() {
 }
 add_action( 'init', 'ccsc_urban_labs_post_type' );
 
+add_filter('excerpt_length', function($length) {
+  return 20;
+});
+
 // Register and load the widget
 function wpb_load_widget() {
   register_widget( 'wpb_widget' );
