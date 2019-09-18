@@ -1,10 +1,13 @@
-const { series, parallel, src, dest } = require('gulp');
+const { series, parallel, src, dest, watch } = require('gulp');
+const gutil = require('gulp-util');
 const babel = require('gulp-babel');
 const minify = require('gulp-babel-minify');
 const rimraf = require('rimraf');
-const ftpCredentials = require('./ftp-credentials');
+const ftp = require('vinyl-ftp');
+const { ftpCredentials } = require('./ftp-credentials');
 
 const PATH = Object.freeze({
+  DEST_LOCALHOST: '/Users/nilspersson/dev/ccsc2/wp-content',
   DEST: 'wp-content',
   PHP: 'src/**/*.php',
   JS: 'src/**/*.js',
@@ -44,11 +47,45 @@ function img() {
     .pipe(dest(PATH.DEST));
 }
 
-function defaultTask(cb) {
-  // place code for your default task here
-  console.log("FTP credentials:", ftpCredentials);
-  cb();
+var defaultTask = series(clear, parallel(php, javascript, css, img));
+
+function deployToLocal() {
+  return src(PATH.DEST + '/**/*')
+    .pipe(dest(PATH.DEST_LOCALHOST));
 }
 
-exports.build = series(clear, parallel(php, javascript, css, img));
-exports.default = defaultTask;
+function deployToProduction() {
+
+  Object.assign(ftpCredentials, {
+    parallel: 10,
+    log: gutil.log
+  })
+  
+  console.log(ftpCredentials)
+  
+  const conn = ftp.create(ftpCredentials);
+
+  return src([PATH.DEST + '/**/*'], { base: '.', buffer: false })
+    .pipe(conn.newer('/')) // only upload newer files
+    .pipe(conn.dest('/'));
+}
+
+function watchFiles() {
+  watch(PATH.CSS, css);
+  watch(PATH.PHP, php);
+  watch(PATH.JS, javascript);
+}
+
+function watchToLocal() {
+  watch(PATH.CSS, series(css, deployToLocal));
+  watch(PATH.PHP, series(php, deployToLocal));
+  watch(PATH.JS, series(javascript, deployToLocal));
+}
+
+function watchToStage() {}
+
+function watchToProduction() {}
+
+exports.default = series(clear, defaultTask, watchToLocal);
+exports.build = defaultTask;
+exports.deploy = deployToProduction;
