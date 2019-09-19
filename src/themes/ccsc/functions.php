@@ -72,11 +72,12 @@ function ccsc_urban_labs_post_type() {
 }
 add_action( 'init', 'ccsc_urban_labs_post_type' );
 
+// Excerpt length
 add_filter('excerpt_length', function($length) {
   return 20;
 });
 
-// Register and load the widget
+// Urban Lab Events Widget
 function wpb_load_widget() {
   register_widget( 'urban_lab_events_widget' );
 }
