@@ -78,66 +78,181 @@ add_filter('excerpt_length', function($length) {
 
 // Register and load the widget
 function wpb_load_widget() {
-  register_widget( 'wpb_widget' );
+  register_widget( 'urban_lab_events_widget' );
 }
 add_action( 'widgets_init', 'wpb_load_widget' );
 
 // Creating the widget 
-class wpb_widget extends WP_Widget {
+class urban_lab_events_widget extends WP_Widget {
+  function __construct() {
+    parent::__construct(
+      // Base ID
+      'urban_lab_events_widget', 
 
-function __construct() {
-parent::__construct(
+      // Widget name will appear in UI
+      'Urban Lab Events', 
 
-// Base ID of your widget
-'wpb_widget', 
+      // Widget description
+      array( 'description' => 'Will display Workshops and Traineeships linked to the currently viewed Urban Lab.' ) 
+    );
+  }
 
-// Widget name will appear in UI
-__('WPBeginner Widget', 'wpb_widget_domain'), 
+  // Creating widget front-end
+  public function widget( $args, $instance ) {
 
-// Widget description
-array( 'description' => __( 'Sample widget based on WPBeginner Tutorial', 'wpb_widget_domain' ), ) 
-);
-}
+    // before and after widget arguments are defined by themes
+    echo $args['before_widget'];
 
-// Creating widget front-end
+    $this_lab_id = get_the_id(); 
 
-public function widget( $args, $instance ) {
-$title = apply_filters( 'widget_title', $instance['title'] );
+    function get_vsel_query_args($event_cat_slug) {
+      // Only get upcoming events
+      $today = strtotime('today'); 
+      $vsel_meta_query = array( 
+        'relation' => 'AND',
+        array( 
+          'key' => 'event-date', 
+          'value' => $today, 
+          'compare' => '>=' 
+        ) 
+      );
 
-// before and after widget arguments are defined by themes
-echo $args['before_widget'];
-if ( ! empty( $title ) )
-echo $args['before_title'] . $title . $args['after_title'];
+      $vsel_tax_query = array(
+        array(
+          'taxonomy' => 'event_cat',
+          'field'    => 'slug',
+          'terms'    => $event_cat_slug,
+        )
+      );
 
-// This is where you run the code and display the output
-echo __( 'Hello, World!', 'wpb_widget_domain' );
-echo $args['after_widget'];
-}
+      // linked_urban_lab
+      // args
+      $query_args = array(
+        'post_type' => 'event', 
+        'post_status' => 'publish', 
+        'ignore_sticky_posts' => true, 
+        'meta_key' => 'event-date', 
+        'orderby' => 'meta_value_num', 
+        'order' => 'asc',
+        'paged' => false, 
+        'meta_query' => $vsel_meta_query,
+        'tax_query' => $vsel_tax_query
+      );
+
+      return $query_args;
+    }
+    
+    $traineeships_query_args = get_vsel_query_args('traineeships');
+    $traineeships_query = new WP_Query( $traineeships_query_args );
+    if( $traineeships_query->have_posts() ): ?>
+    <h2>Traineeships</h2>
+    <div id="vsel" class="vsel-container">
+    <?php while( $traineeships_query->have_posts() ) : $traineeships_query->the_post(); ?>
+      <?php
+        $linked_urban_lab = get_field('linked_urban_lab');
+        if ( !$linked_urban_lab ) continue;
+        if ( $linked_urban_lab != $this_lab_id ) continue;
+
+        $event_date = get_post_meta( get_the_ID(), 'event-date', true ); 
+      ?>
+      <div class="vsel-content traineeships vsel-upcoming">
+        <div class="vsel-meta">
+          <h3 class="vsel-meta-title">
+            <a href="<?php the_permalink(); ?>">
+              <?php the_title(); ?>
+            </a>
+          </h3>
+
+          <p class="vsel-meta-date vsel-meta-combined-date"><?php
+            $sep = ' - ';
+            $date_format_custom = get_option('vsel-setting-38');
+              
+            // set date format
+            if ( !empty($date_format_custom) ) {
+              $date_format = $date_format_custom;
+            } else {
+              $date_format = get_option('date_format');
+            }
+            $widget_start_date = get_post_meta( get_the_ID(), 'event-start-date', true );
+            $widget_end_date = get_post_meta( get_the_ID(), 'event-date', true );
+            $widget_start_label = get_option('vsel-setting-23');
+            $widget_end_label = get_option('vsel-setting-24');
+
+
+            $output = sprintf(esc_attr($widget_start_label), '<span>'.date_i18n( esc_attr($date_format), esc_attr($widget_start_date) ).'</span>' );
+            $output .= $sep;
+            $output .= sprintf(esc_attr($widget_end_label), '<span>'.date_i18n( esc_attr($date_format), esc_attr($widget_end_date) ).'</span>' );
+            echo $output;
+          ?></p>
+        </div>
+      </div>
+    <?php endwhile; ?>
+    </div>
+    <?php endif;
+    wp_reset_query();
+
+    $workshops_query_args = get_vsel_query_args('workshops');
+    $workshops_query = new WP_Query( $workshops_query_args );
+    if( $workshops_query->have_posts() ): ?>
+    <h2>Workshops</h2>
+    <div id="vsel" class="vsel-container">
+    <?php while( $workshops_query->have_posts() ) : $workshops_query->the_post(); ?>
+      <?php
+        $linked_urban_lab = get_field('linked_urban_lab');
+        if ( !$linked_urban_lab ) continue;
+        if ( $linked_urban_lab != $this_lab_id ) continue;
+
+        $event_date = get_post_meta( get_the_ID(), 'event-date', true ); 
+      ?>
+      <div class="vsel-content workshops vsel-upcoming">
+        <div class="vsel-meta">
+          <h3 class="vsel-meta-title">
+            <a href="<?php the_permalink(); ?>">
+              <?php the_title(); ?>
+            </a>
+          </h3>
+
+          <p class="vsel-meta-date vsel-meta-combined-date"><?php
+            $sep = ' - ';
+            $date_format_custom = get_option('vsel-setting-38');
+              
+            // set date format
+            if ( !empty($date_format_custom) ) {
+              $date_format = $date_format_custom;
+            } else {
+              $date_format = get_option('date_format');
+            }
+            $widget_start_date = get_post_meta( get_the_ID(), 'event-start-date', true );
+            $widget_end_date = get_post_meta( get_the_ID(), 'event-date', true );
+            $widget_start_label = get_option('vsel-setting-23');
+            $widget_end_label = get_option('vsel-setting-24');
+
+
+            $output = sprintf(esc_attr($widget_start_label), '<span>'.date_i18n( esc_attr($date_format), esc_attr($widget_start_date) ).'</span>' );
+            $output .= $sep;
+            $output .= sprintf(esc_attr($widget_end_label), '<span>'.date_i18n( esc_attr($date_format), esc_attr($widget_end_date) ).'</span>' );
+            echo $output;
+          ?></p>
+        </div>
+      </div>
+    <?php endwhile; ?>
+    </div>
+    <?php endif;
+    wp_reset_query();
+
+    echo $args['after_widget'];
+  }
        
-// Widget Backend 
-public function form( $instance ) {
-if ( isset( $instance[ 'title' ] ) ) {
-$title = $instance[ 'title' ];
-}
-else {
-$title = __( 'New title', 'wpb_widget_domain' );
-}
-// Widget admin form
-?>
-<p>
-<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
-<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
-</p>
-<?php 
-}
-   
-// Updating widget replacing old instances with new
-public function update( $new_instance, $old_instance ) {
-$instance = array();
-$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
-return $instance;
-}
-} // Class wpb_widget ends here
+  // Widget Backend 
+  public function form( $instance ) { ?>
+    <p>
+      This widget will display Workshops and Traineeships linked to the currently viewed Urban Lab.
+    </p>
+    <p>
+      You can easily link an event to an Urban Lab when editing the event.
+    </p>
+  <?php }
+} // Class urban_lab_events_widget ends here
 
 function ccsc_sidebar($section) {
   $parent_sidebar = 'blog';
