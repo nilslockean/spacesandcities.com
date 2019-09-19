@@ -88,4 +88,4 @@ function watchToProduction() {}
 
 exports.default = series(clear, defaultTask, watchToLocal);
 exports.build = defaultTask;
-exports.deploy = deployToProduction;
+exports.deploy = series(clear, defaultTask, deployToProduction);
