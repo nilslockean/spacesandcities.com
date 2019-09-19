@@ -106,7 +106,7 @@ class urban_lab_events_widget extends WP_Widget {
 
     $this_lab_id = get_the_id(); 
 
-    function get_vsel_query_args($event_cat_slug) {
+    function get_vsel_query_args($event_cat_slug, $urban_lab_id) {
       // Only get upcoming events
       $today = strtotime('today'); 
       $vsel_meta_query = array( 
@@ -115,7 +115,12 @@ class urban_lab_events_widget extends WP_Widget {
           'key' => 'event-date', 
           'value' => $today, 
           'compare' => '>=' 
-        ) 
+        ),
+        array(
+          'key' => 'linked_urban_lab',
+          'value' => $urban_lab_id,
+          'compare' => '='
+        ),
       );
 
       $vsel_tax_query = array(
@@ -143,17 +148,13 @@ class urban_lab_events_widget extends WP_Widget {
       return $query_args;
     }
     
-    $traineeships_query_args = get_vsel_query_args('traineeships');
+    $traineeships_query_args = get_vsel_query_args('traineeships', $this_lab_id);
     $traineeships_query = new WP_Query( $traineeships_query_args );
     if( $traineeships_query->have_posts() ): ?>
     <h2>Traineeships</h2>
     <div id="vsel" class="vsel-container">
     <?php while( $traineeships_query->have_posts() ) : $traineeships_query->the_post(); ?>
       <?php
-        $linked_urban_lab = get_field('linked_urban_lab');
-        if ( !$linked_urban_lab ) continue;
-        if ( $linked_urban_lab != $this_lab_id ) continue;
-
         $event_date = get_post_meta( get_the_ID(), 'event-date', true ); 
       ?>
       <div class="vsel-content traineeships vsel-upcoming">
@@ -192,17 +193,13 @@ class urban_lab_events_widget extends WP_Widget {
     <?php endif;
     wp_reset_query();
 
-    $workshops_query_args = get_vsel_query_args('workshops');
+    $workshops_query_args = get_vsel_query_args('workshops', $this_lab_id);
     $workshops_query = new WP_Query( $workshops_query_args );
     if( $workshops_query->have_posts() ): ?>
     <h2>Workshops</h2>
     <div id="vsel" class="vsel-container">
     <?php while( $workshops_query->have_posts() ) : $workshops_query->the_post(); ?>
       <?php
-        $linked_urban_lab = get_field('linked_urban_lab');
-        if ( !$linked_urban_lab ) continue;
-        if ( $linked_urban_lab != $this_lab_id ) continue;
-
         $event_date = get_post_meta( get_the_ID(), 'event-date', true ); 
       ?>
       <div class="vsel-content workshops vsel-upcoming">
