@@ -77,13 +77,60 @@ add_filter('excerpt_length', function($length) {
   return 20;
 });
 
-// Urban Lab Events Widget
-function wpb_load_widget() {
+// CCSC Widgets
+function ccsc_load_widgets() {
+  register_widget( 'urban_lab_coordinator_widget' );
   register_widget( 'urban_lab_events_widget' );
 }
-add_action( 'widgets_init', 'wpb_load_widget' );
+add_action( 'widgets_init', 'ccsc_load_widgets' );
 
-// Creating the widget 
+// Urban Lab Coordinator Widget
+class urban_lab_coordinator_widget extends WP_Widget {
+  function __construct() {
+    parent::__construct(
+      // Base ID
+      'urban_lab_coordinator_widget', 
+
+      // Widget name will appear in UI
+      'Urban Lab Coodinator', 
+
+      // Widget description
+      array( 'description' => 'Urban Lab coodinator\'s name, email address and phone number.' ) 
+    );
+  }
+
+  // Creating widget front-end
+  public function widget( $args, $instance ) {
+
+    $this_lab_id = get_the_id(); 
+    
+    // before and after widget arguments are defined by themes
+    echo $args['before_widget'];
+
+    $coordinator = get_field('urban_lab_coordinator');
+    if ( $coordinator ) {
+      echo '<h2>Coordinator</h2>';
+      foreach( $coordinator as $field => $value ) {
+        if ( !$value ) continue;
+        echo '<div class="coordinator-' . $field . '">' . $value . '</div>';
+      }
+    }
+
+    echo $args['after_widget'];
+  }
+       
+  // Widget Backend 
+  public function form( $instance ) { ?>
+    <p>
+      This widget will display the currently viewed Urban Lab coodinator's name, email address and phone number.
+    </p>
+    <p>
+      You can easily edit the coordinator's contact details when editing the Urban Lab.
+    </p>
+  <?php }
+} // Class urban_lab_coordinator_widget ends here
+
+// Urban Labs Event Widget
 class urban_lab_events_widget extends WP_Widget {
   function __construct() {
     parent::__construct(
@@ -94,7 +141,7 @@ class urban_lab_events_widget extends WP_Widget {
       'Urban Lab Events', 
 
       // Widget description
-      array( 'description' => 'Will display Workshops and Traineeships linked to the currently viewed Urban Lab.' ) 
+      array( 'description' => 'Workshops and Traineeships linked to the currently viewed Urban Lab.' ) 
     );
   }
 
