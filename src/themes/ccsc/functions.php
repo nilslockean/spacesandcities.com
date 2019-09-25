@@ -10,6 +10,15 @@ require_once 'classes/class-fl-child-theme.php';
 // Actions
 add_action( 'wp_enqueue_scripts', 'FLChildTheme::enqueue_scripts', 1000 );
 
+function my_acf_google_map_api( $api ){
+	
+	$api['key'] = 'AIzaSyB0Lem3uy2KXWtcEwhlXPSUO9fsPn8PfCc';
+	
+	return $api;
+	
+}
+add_filter('acf/fields/google_map/api', 'my_acf_google_map_api');
+
 // CCSC Sidebars
 if ( function_exists('register_sidebar') ) {
 
@@ -79,6 +88,7 @@ add_filter('excerpt_length', function($length) {
 
 // CCSC Widgets
 function ccsc_load_widgets() {
+  register_widget( 'linked_urban_lab_widget' );
   register_widget( 'coordinator_widget' );
   register_widget( 'urban_lab_events_widget' );
 }
@@ -130,17 +140,17 @@ class linked_urban_lab_widget extends WP_Widget {
 } // Class linked_urban_lab_widget ends here
 
 // Urban Lab Coordinator Widget
-class urban_lab_coordinator_widget extends WP_Widget {
+class coordinator_widget extends WP_Widget {
   function __construct() {
     parent::__construct(
       // Base ID
-      'urban_lab_coordinator_widget', 
+      'coordinator_widget', 
 
       // Widget name will appear in UI
-      'Urban Lab Coodinator', 
+      'Coodinator', 
 
       // Widget description
-      array( 'description' => 'Urban Lab coodinator\'s name, email address and phone number.' ) 
+      array( 'description' => 'Coodinator\'s name, email address and phone number.' ) 
     );
   }
 
@@ -152,12 +162,12 @@ class urban_lab_coordinator_widget extends WP_Widget {
     // before and after widget arguments are defined by themes
     echo $args['before_widget'];
 
-    $coordinator = get_field('urban_lab_coordinator');
+    $coordinator = get_field('coordinator');
     if ( $coordinator ) {
       echo '<h2>Coordinator</h2>';
       foreach( $coordinator as $field => $value ) {
         if ( !$value ) continue;
-        echo '<div class="coordinator-' . $field . '">' . $value . '</div>';
+        echo '<div class="coordinator-details ' . $field . '">' . $value . '</div>';
       }
     }
 
@@ -167,13 +177,10 @@ class urban_lab_coordinator_widget extends WP_Widget {
   // Widget Backend 
   public function form( $instance ) { ?>
     <p>
-      This widget will display the currently viewed Urban Lab coodinator's name, email address and phone number.
-    </p>
-    <p>
-      You can easily edit the coordinator's contact details when editing the Urban Lab.
+      This widget will display the currently viewed Urban Lab or Event coodinator's name, email address and phone number.
     </p>
   <?php }
-} // Class urban_lab_coordinator_widget ends here
+} // Class coordinator_widget ends here
 
 // Urban Labs Event Widget
 class urban_lab_events_widget extends WP_Widget {
