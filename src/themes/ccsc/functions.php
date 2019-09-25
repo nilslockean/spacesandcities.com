@@ -79,10 +79,55 @@ add_filter('excerpt_length', function($length) {
 
 // CCSC Widgets
 function ccsc_load_widgets() {
-  register_widget( 'urban_lab_coordinator_widget' );
+  register_widget( 'coordinator_widget' );
   register_widget( 'urban_lab_events_widget' );
 }
 add_action( 'widgets_init', 'ccsc_load_widgets' );
+
+// Linked Urban Lab Widget
+class linked_urban_lab_widget extends WP_Widget {
+  function __construct() {
+    parent::__construct(
+      // Base ID
+      'linked_urban_lab_widget', 
+
+      // Widget name will appear in UI
+      'Linked Urban Lab', 
+
+      // Widget description
+      array( 'description' => 'Linked Urban Lab details.' ) 
+    );
+  }
+
+  // Creating widget front-end
+  public function widget( $args, $instance ) {
+
+    $this_lab_id = get_the_id(); 
+    
+    // before and after widget arguments are defined by themes
+    echo $args['before_widget'];
+
+
+    $linked_urban_lab = get_field('linked_urban_lab');
+    if ( $linked_urban_lab ): ?>
+    <h2><?php echo get_the_title($linked_urban_lab); ?></h2>
+    <!-- <p><?php echo get_the_excerpt($linked_urban_lab); ?></p> -->
+    <a href="<?php echo get_permalink($linked_urban_lab); ?>">More about this Urban Lab &rarr;</a>
+    <?php endif;
+
+    echo $args['after_widget'];
+  }
+       
+  // Widget Backend 
+  public function form( $instance ) { ?>
+    <p>
+      This widget will display the event's linked Urban Lab details (title, excerpt and link).
+    </p>
+    <p>
+    You can easily link an event to an Urban Lab when editing the event.
+    </p>
+  <?php }
+} // Class linked_urban_lab_widget ends here
 
 // Urban Lab Coordinator Widget
 class urban_lab_coordinator_widget extends WP_Widget {
