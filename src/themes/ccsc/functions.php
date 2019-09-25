@@ -11,11 +11,9 @@ require_once 'classes/class-fl-child-theme.php';
 add_action( 'wp_enqueue_scripts', 'FLChildTheme::enqueue_scripts', 1000 );
 
 function my_acf_google_map_api( $api ){
-	
 	$api['key'] = 'AIzaSyB0Lem3uy2KXWtcEwhlXPSUO9fsPn8PfCc';
 	
 	return $api;
-	
 }
 add_filter('acf/fields/google_map/api', 'my_acf_google_map_api');
 
