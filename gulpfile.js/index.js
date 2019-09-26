@@ -5,6 +5,8 @@ const minify = require('gulp-babel-minify');
 const rimraf = require('rimraf');
 const ftp = require('vinyl-ftp');
 const { ftpCredentials } = require('./ftp-credentials');
+const sass = require('gulp-sass')
+sass.compiler = require('node-sass')
 
 const PATH = Object.freeze({
   DEST_LOCALHOST: '/Users/nilspersson/dev/ccsc2/wp-content',
@@ -12,6 +14,7 @@ const PATH = Object.freeze({
   PHP: 'src/**/*.php',
   JS: 'src/**/*.js',
   CSS: 'src/**/*.css',
+  SASS: ['src/**/*.sass', 'src/**/*.scss'],
   IMG: ['src/**/*.png', 'src/**/*.jpg', 'src/**/*.jpeg']
 });
 
@@ -42,12 +45,18 @@ function css() {
     .pipe(dest(PATH.DEST));
 }
 
+function scss() {
+  return src(PATH.SASS)
+    .pipe(sass().on('error', sass.logError))
+    .pipe(dest(PATH.DEST));
+}
+
 function img() {
   return src(PATH.IMG)
     .pipe(dest(PATH.DEST));
 }
 
-var defaultTask = series(clear, parallel(php, javascript, css, img));
+var defaultTask = series(clear, parallel(php, javascript, css, scss, img));
 
 function deployToLocal() {
   return src(PATH.DEST + '/**/*')
@@ -78,6 +87,7 @@ function watchFiles() {
 
 function watchToLocal() {
   watch(PATH.CSS, series(css, deployToLocal));
+  watch(PATH.SASS, series(scss, deployToLocal));
   watch(PATH.PHP, series(php, deployToLocal));
   watch(PATH.JS, series(javascript, deployToLocal));
 }

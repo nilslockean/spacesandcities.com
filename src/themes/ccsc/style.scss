@@ -1,0 +1,324 @@
+/*
+Theme Name: Cultural and Creative Spaces and Cities
+Theme URI: https://github.com/nilslockean/spacesandcities.com
+Version: 1.1
+Description: A Beaver Builder Theme child theme tailored for the CCSC website.
+Author: Nils Lockean
+Author URI: https://nilslockean.se
+template: bb-theme
+*/
+
+$yellow: #ffe3ca;
+
+body {
+  @media (max-width: 767px), (max-width: 991px) {
+    font-size: initial;
+  }
+
+  &:not(.logged-in) {
+    .fl-page-nav ul.navbar-nav>li.show-admin {
+      display: none;
+    }
+  }
+}
+
+// Set width of top navigation and post content
+.fl-full-width {
+  @media (min-width: 1100px) {
+    &.single .container,
+    .fl-page-header-container.container {
+      width: 1120px;
+    }
+  }
+}
+
+// General link styles
+.fl-content a {
+	text-decoration: underline;
+}
+
+.fl-post-title a {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/**
+  * VSEL
+**/
+.vsel-meta {
+  .acf-field-name {
+    display: none;
+  }
+  p {
+    & > span:before,
+    & > a:before {
+      font-family: dashicons;
+      padding-right: .4em;
+      display: inline-block;
+      position: relative;
+      top: 2px;
+    }
+  }
+
+  .vsel-meta-date span:first-child:before {
+    content: "\f508";
+  }
+  .vsel-meta-time span:before {
+    content: "\f469";
+  }
+  .vsel-meta-location span:before {
+    content: "\f231";
+  }
+  .vsel-meta-link a:before {
+    content: "\f504";
+    text-decoration: none;
+  }
+  
+}
+
+// VSEL Overview 
+.page #vsel {
+  .vsel-info {
+    display: none;
+  }
+  .vsel-meta .vsel-info {
+    font-size: 1.15em;
+  }
+  .vsel-content {
+    border-bottom-width: 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #dec9b0;
+    border-width: 1px;
+    border-width: 0;
+    background: $yellow;
+    .vsel-meta-title a {
+      text-decoration: none;
+    }
+    .vsel-meta {
+      box-sizing: border-box;
+      padding: 1em;
+      font-size: .85em;
+      width: 100%;
+      float: none;
+      @media screen and (min-width: 767px) {
+        width: 50%;
+		    float: left;
+      }
+      h3 {
+        font-size: 1.5em;
+        font-weight: normal;
+      }
+    }
+    .vsel-image-info {
+      width: 100%;
+      float: none;
+      @media screen and (min-width: 767px) {
+        width: 50%;
+		    float: right;
+      }
+      .vsel-image {
+        max-width: none;
+        width: 100%;
+      }
+    }
+    .vsel-image {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .vsel-meta-cats {
+      margin-bottom: 0;
+      span {
+        color: transparent;
+      }
+      a {
+        background: #786eac;
+        color: white;
+        padding: .2em .5em;
+        text-decoration: none;
+        font-size: .8em;
+        margin-right: -5px;
+      }
+    }
+
+    // Past Events in Overview
+    &.vsel-past {
+      background: #f9f9f9;
+      border-width: 0;
+      .vsel-meta h3:after {
+        content: "Past Event";
+        background: #ce5d4a;
+        color: white;
+        font-weight: bold;
+        font-size: .8em;
+        padding: .2em .5em;
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
+  }
+}
+
+/* Single Event */
+.single-event .fl-post-meta,
+.single-urban-lab .fl-post-meta {
+	display: none;
+}
+
+.single-event .vsel-meta,
+.single-event .vsel-image-info {
+	width: initial;
+	float: none;
+}
+.single-event .fl-post-title {
+	font-family: 'Source Serif Pro', 'Lato', 'Helvetica Neue', sans-serif;
+	font-weight: normal;
+	font-size: 2.5em;
+	line-height: 1.2em;
+}
+
+.single-event .fl-post-content .vsel-meta {
+	background: #f9f9f9;
+	background: $yellow;
+	border: 1px solid #ffe7cf;
+	border-width: 0;
+	padding: 1em 1em .5em 1em;
+	margin-bottom: 1em;
+	padding-bottom: 1em;
+}
+
+.single-event .fl-post-content .vsel-meta-cats {
+    margin-bottom: 0;
+}
+
+.single-event .fl-post-content .vsel-meta-cats span {
+    color: transparent;
+}
+
+.single-event .fl-post-content .vsel-meta-cats a {
+    background: #786eac;
+    color: white;
+    padding: .2em .5em;
+    text-decoration: none;
+    font-size: .8em;
+    margin-right: -5px;
+}
+
+/* Event Widget */
+.vsel-widget .vsel-widget-text,
+.widget_urban_lab_events_widget .vsel-widget-text {
+	border-bottom-width: 0;
+}
+
+.widget_urban_lab_events_widget .vsel-meta {
+	width: 100%;
+	clear: both;
+}
+
+.vsel-widget #vsel.vsel-container .vsel-content,
+.widget_urban_lab_events_widget #vsel.vsel-container .vsel-content {
+	border-bottom-width: 0;
+	/*background: #ffe7cf;
+	border: 1px solid #ffe7cf;*/
+	background: #322b80;
+	border: 1px solid #322b80;
+	color: #fff;
+	padding: 1em;
+	padding-bottom: .5em;
+}
+
+.vsel-widget #vsel.vsel-container .vsel-content:last-child,
+.widget_urban_lab_events_widget #vsel.vsel-container .vsel-content:last-child {
+	margin-bottom: 0;
+}
+
+.vsel-widget .vsel-widget-link {
+	margin-top: 1em;
+}
+
+.vsel-widget #vsel.vsel-container .vsel-content h3 a,
+.widget_urban_lab_events_widget #vsel.vsel-container .vsel-content h3 a {
+	color: white;
+}
+
+.vsel-widget #vsel.vsel-container .vsel-content .vsel-meta p,
+.widget_urban_lab_events_widget #vsel.vsel-container .vsel-content .vsel-meta p{
+	font-size: .8em;
+}
+
+/* News Widget */
+.widget.widget_recent_entries ul {
+	list-style-type: none;
+	padding-inline-start: 0;
+}
+.widget.widget_recent_entries ul li {
+	display: block;
+	margin-bottom: 1em;
+}
+.widget.widget_recent_entries ul li a {
+	display: block;
+	background: #ffe3ca;
+	padding: 1em;
+}
+
+.fl-after-post-widget .vsel-widget h4 {
+	font-size: 32px;
+}
+
+.single-urban-lab .fl-after-post-widget {
+	display: none;
+}
+
+@media (min-width: 768px) {
+	.fl-after-post-widget .vsel-widget #vsel.vsel-container {
+		margin-top: -2%;
+	}
+	.fl-after-post-widget .vsel-widget #vsel.vsel-container .vsel-content {
+		width: 49%;
+		float: left;
+		clear: none;
+		margin: 2% 2% 0 0;
+	}
+	.fl-after-post-widget .vsel-widget #vsel.vsel-container .vsel-content:nth-child(even) {
+		margin-right: 0;
+	}
+}
+
+/* Coordinator Widget */
+.widget_coordinator_widget > .coordinator-details:before {
+	font-family: dashicons;
+	padding-right: .4em;
+	display: inline-block;
+	position: relative;
+	top: 2px;
+}
+// .widget_coordinator_widget > .name:before {
+// 	content: "\f328";
+// }
+
+.widget_coordinator_widget > .phone_number:before {
+	content: "\f525";
+}
+.widget_coordinator_widget > .email:before {
+	content: "\f466";
+}
+
+/* Footer */
+footer .widget_text p img.wp-image-249 {
+	width: 121px;
+	height: 80px;
+	margin-bottom: 0;
+}
+
+@media (min-width: 992px) {
+	footer .col-md-6 {
+		width: 33%;
+	}
+	footer .col-md-6:first-child {
+		width: 67%;
+	}
+}
