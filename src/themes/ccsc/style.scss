@@ -1,14 +1,19 @@
 /*
 Theme Name: Cultural and Creative Spaces and Cities
 Theme URI: https://github.com/nilslockean/spacesandcities.com
-Version: 1.1
+Version: 1.0.3
 Description: A Beaver Builder Theme child theme tailored for the CCSC website.
 Author: Nils Lockean
 Author URI: https://nilslockean.se
 template: bb-theme
 */
 
+// Colors
 $yellow: #ffe3ca;
+$purple_light: #786eac;
+
+// Variables
+$event_label: $purple_light;
 
 body {
   @media (max-width: 767px), (max-width: 991px) {
@@ -135,7 +140,7 @@ body {
         color: transparent;
       }
       a {
-        background: #786eac;
+        background: $event_label;
         color: white;
         padding: .2em .5em;
         text-decoration: none;
@@ -163,49 +168,52 @@ body {
   }
 }
 
-/* Single Event */
-.single-event .fl-post-meta,
-.single-urban-lab .fl-post-meta {
-	display: none;
-}
+// Single Event
+.single-event {
+  // Hide date
+  .fl-post-meta {
+    display: none;
+  }
+  
+  .vsel-meta,
+  .vsel-image-info {
+    width: initial;
+    float: none;
+  }
 
-.single-event .vsel-meta,
-.single-event .vsel-image-info {
-	width: initial;
-	float: none;
-}
-.single-event .fl-post-title {
-	font-family: 'Source Serif Pro', 'Lato', 'Helvetica Neue', sans-serif;
-	font-weight: normal;
-	font-size: 2.5em;
-	line-height: 1.2em;
-}
+  .fl-post-title {
+    font-family: 'Source Serif Pro', 'Lato', 'Helvetica Neue', sans-serif;
+    font-weight: normal;
+    font-size: 2.5em;
+    line-height: 1.2em;
+  }
 
-.single-event .fl-post-content .vsel-meta {
-	background: #f9f9f9;
-	background: $yellow;
-	border: 1px solid #ffe7cf;
-	border-width: 0;
-	padding: 1em 1em .5em 1em;
-	margin-bottom: 1em;
-	padding-bottom: 1em;
-}
-
-.single-event .fl-post-content .vsel-meta-cats {
-    margin-bottom: 0;
-}
-
-.single-event .fl-post-content .vsel-meta-cats span {
-    color: transparent;
-}
-
-.single-event .fl-post-content .vsel-meta-cats a {
-    background: #786eac;
-    color: white;
-    padding: .2em .5em;
-    text-decoration: none;
-    font-size: .8em;
-    margin-right: -5px;
+  .fl-post-content {
+    .vsel-meta {
+      background: #f9f9f9;
+      background: $yellow;
+      border: 1px solid #ffe7cf;
+      border-width: 0;
+      padding: 1em 1em .5em 1em;
+      margin-bottom: 1em;
+      padding-bottom: 1em;
+    }
+    .vsel-meta-cats {
+      margin-bottom: 0;
+      // TODO: Mixin?
+      span {
+        color: transparent;
+      }
+      a {
+        background: $event_label;
+        color: white;
+        padding: .2em .5em;
+        text-decoration: none;
+        font-size: .8em;
+        margin-right: -5px;
+     }
+    }
+  }
 }
 
 /* Event Widget */
@@ -321,4 +329,8 @@ footer .widget_text p img.wp-image-249 {
 	footer .col-md-6:first-child {
 		width: 67%;
 	}
+}
+
+.single-urban-lab .fl-post-meta {
+	display: none;
 }
