@@ -119,6 +119,13 @@ class linked_urban_lab_widget extends WP_Widget {
     $linked_urban_lab = get_field('linked_urban_lab');
     if ( $linked_urban_lab ): ?>
     <h2><?php echo get_the_title($linked_urban_lab); ?></h2>
+    <?php
+      $leaders = get_the_terms( $linked_urban_lab , 'leader' );
+      if ( !empty($leaders) ) {
+        $leader = $leaders[0]->name;
+        echo '<p>Leader: ' . $leader. '</p>';   
+      }
+    ?>
     <!-- <p><?php echo get_the_excerpt($linked_urban_lab); ?></p> -->
     <a href="<?php echo get_permalink($linked_urban_lab); ?>">More about this Urban Lab &rarr;</a>
     <?php endif;
